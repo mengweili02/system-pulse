@@ -1,0 +1,42 @@
+{
+    "type": "object",
+    "title": "SystemPulse",
+    "properties": {
+        "show-cpu": {
+            "type": "boolean",
+            "title": "CPU Usage",
+            "default": true,
+            "description": "Show CPU usage percentage in the top bar."
+        },
+        "show-memory": {
+            "type": "boolean",
+            "title": "Memory Usage",
+            "default": true,
+            "description": "Show memory (RAM) usage percentage in the top bar."
+        },
+        "show-gpu": {
+            "type": "boolean",
+            "title": "GPU VRAM",
+            "default": true,
+            "description": "Show AMD GPU VRAM usage in the top bar."
+        },
+        "show-gpu-temp": {
+            "type": "boolean",
+            "title": "GPU Temperature",
+            "default": true,
+            "description": "Show AMD GPU temperature in the top bar."
+        },
+        "show-cpu-temp": {
+            "type": "boolean",
+            "title": "CPU Temperature",
+            "default": true,
+            "description": "Show CPU temperature in the top bar."
+        },
+        "decimal-places": {
+            "type": "integer",
+            "title": "Decimal Places",
+            "default": 1,
+            "description": "Number of decimal places for displayed values."
+        }
+    }
+}

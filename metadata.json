@@ -1,0 +1,8 @@
+{
+  "uuid": "system-pulse@mengweili02.github.com",
+  "name": "SystemPulse",
+  "description": "Real-time system monitoring: GPU temp/VRAM, CPU/RAM usage, and temperatures in the top bar.",
+  "shell-version": ["45", "46", "47", "48", "49", "50"],
+  "url": "https://github.com/mengweili02/system-pulse",
+  "version": 1
+}
