@@ -14,7 +14,7 @@ mkdir -p "$EXTENSION_DIR"
 cp metadata.json "$EXTENSION_DIR/"
 cp extension.js "$EXTENSION_DIR/"
 cp prefs.js "$EXTENSION_DIR/"
-cp org.gnome.shell.extensions.system-all-in-one.gschema.xml "$EXTENSION_DIR/"
+cp org.gnome.shell.extensions.system-pulse.gschema.xml "$EXTENSION_DIR/"
 
 echo "Extension installed to: $EXTENSION_DIR"
 echo ""
