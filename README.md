@@ -12,11 +12,6 @@ A GNOME Shell extension that displays real-time system metrics: GPU temperature/
 
 ## Installation
 
-### Via GNOME Extensions (Recommended)
-
-1. Install via [GNOME Extensions Website](https://extensions.gnome.org/extension/XXXXX/system-pulse/)
-2. Toggle the extension on
-
 ### Manual Installation
 
 ```bash
