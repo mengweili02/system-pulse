@@ -39,7 +39,7 @@ const METRIC_SETTINGS = [
 
 export default class SystemPulsePreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
-        const settings = this.getSettings();
+        const settings = this.getSettings('org.gnome.shell.extensions.system-pulse');
 
         const page = new Adw.PreferencesPage({
             title: 'SystemPulse',

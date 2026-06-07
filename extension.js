@@ -336,7 +336,7 @@ class SystemPulse extends PanelMenu.Button {
 
 export default class SystemPulseExtension extends Extension {
     enable() {
-        this._settings = this.getSettings();
+        this._settings = this.getSettings('org.gnome.shell.extensions.system-pulse');
         this._indicator = new SystemPulse(this._settings);
         Main.panel.addToStatusArea(this.uuid, this._indicator, 0, 'right');
     }
