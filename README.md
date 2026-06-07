@@ -14,7 +14,7 @@ A GNOME Shell extension that displays real-time system metrics: GPU temperature/
 
 ### Via GNOME Extensions (Recommended)
 
-1. Install via [GNOME Extensions Website](https://extensions.gnome.org/extension/XXXXX/system-monitor-all-in-one/)
+1. Install via [GNOME Extensions Website](https://extensions.gnome.org/extension/XXXXX/system-pulse/)
 2. Toggle the extension on
 
 ### Manual Installation
@@ -22,7 +22,7 @@ A GNOME Shell extension that displays real-time system metrics: GPU temperature/
 ```bash
 cd /tmp
 git clone <repository-url>
-cd system-monitor-all-in-one
+cd system-pulse
 chmod +x install.sh
 ./install.sh
 ```
@@ -41,7 +41,7 @@ Then restart GNOME Shell:
 
 Access preferences via:
 - Extensions app → SystemPulse → Preferences
-- Or run: `gnome-extensions prefs system-pulse@system-monitor.com`
+- Or run: `gnome-extensions prefs system-pulse@mengweili02.github.com`
 
 You can toggle individual metrics and adjust decimal precision.
 
