@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema path="/org/gnome/shell/extensions/system-pulse/" id="org.gnome.shell.extensions.system-pulse">
-  <key name="show-cpu" type="b">
-    <default>true</default>
-    <summary>Show CPU usage</summary>
-  </key>
-  <key name="show-memory" type="b">
-    <default>true</default>
-    <summary>Show memory usage</summary>
-  </key>
-  <key name="show-gpu" type="b">
-    <default>true</default>
-    <summary>Show GPU VRAM</summary>
-  </key>
-  <key name="show-gpu-temp" type="b">
-    <default>true</default>
-    <summary>Show GPU temperature</summary>
-  </key>
-  <key name="show-cpu-temp" type="b">
-    <default>true</default>
-    <summary>Show CPU temperature</summary>
-  </key>
-  <key name="decimal-places" type="i">
-    <default>1</default>
-    <summary>Decimal places for displayed values</summary>
-  </key>
-</schema>
+< schemalist>
+  <schema path="/org/gnome/shell/extensions/system-pulse/" id="org.gnome.shell.extensions.system-pulse">
+    <key name="show-cpu" type="b">
+      <default>true</default>
+      <summary>Show CPU usage</summary>
+    </key>
+    <key name="show-memory" type="b">
+      <default>true</default>
+      <summary>Show memory usage</summary>
+    </key>
+    <key name="show-gpu" type="b">
+      <default>true</default>
+      <summary>Show GPU VRAM</summary>
+    </key>
+    <key name="show-gpu-temp" type="b">
+      <default>true</default>
+      <summary>Show GPU temperature</summary>
+    </key>
+    <key name="show-cpu-temp" type="b">
+      <default>true</default>
+      <summary>Show CPU temperature</summary>
+    </key>
+    <key name="decimal-places" type="i">
+      <default>1</default>
+      <summary>Decimal places for displayed values</summary>
+    </key>
+  </schema>
+</schemalist>
