@@ -234,20 +234,28 @@ class SystemPulse extends PanelMenu.Button {
                 try {
                     let [ok, stdout, stderr] = proc.communicate_utf8_finish(res);
                     if (ok && stdout) {
-                        let data = JSON.parse(stdout);
-                        let cardKey = Object.keys(data).find(k => k.startsWith('card'));
+                        try {
+                            let data = JSON.parse(stdout);
+                            console.log('GPU JSON:', JSON.stringify(data));
+                            let cardKey = Object.keys(data).find(k => k.startsWith('card'));
 
-                        if (cardKey) {
-                            let info = data[cardKey];
-                            let gpuUsage = info['GPU use (%)'] || '0';
+                            if (cardKey) {
+                                let info = data[cardKey];
+                                console.log('GPU info:', JSON.stringify(info));
+                                let gpuUsage = info['GPU use (%)'] || '0';
+                                console.log('GPU usage value:', gpuUsage);
 
-                            let vramTotalB = parseInt(info['VRAM Total Memory (B)']) || 0;
-                            let vramUsedB = parseInt(info['VRAM Total Used Memory (B)']) || 0;
+                                let vramTotalB = parseInt(info['VRAM Total Memory (B)']) || 0;
+                                let vramUsedB = parseInt(info['VRAM Total Used Memory (B)']) || 0;
 
-                            let vramTotalGB = (vramTotalB / 1073741824).toFixed(1);
-                            let vramUsedGB = (vramUsedB / 1073741824).toFixed(1);
+                                let vramTotalGB = (vramTotalB / 1073741824).toFixed(1);
+                                let vramUsedGB = (vramUsedB / 1073741824).toFixed(1);
 
-                            this._gpuVramLabel.text = `VRAM: ${vramUsedGB}/${vramTotalGB}Go`;
+                                this._gpuVramLabel.text = `VRAM: ${vramUsedGB}/${vramTotalGB}Go | GPU: ${gpuUsage}%`;
+                            }
+                        } catch (e) {
+                            console.error('GPU parse error:', e);
+                            this._gpuVramLabel.text = 'VRAM: Err';
                         }
                     }
                 } catch (e) {
