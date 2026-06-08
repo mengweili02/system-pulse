@@ -16,6 +16,9 @@ cp extension.js "$EXTENSION_DIR/"
 cp prefs.js "$EXTENSION_DIR/"
 cp org.gnome.shell.extensions.system-pulse.gschema.xml "$EXTENSION_DIR/"
 
+echo "Compiling schemas..."
+glib-compile-schemas "$EXTENSION_DIR/" 2>/dev/null || echo "Warning: glib-compile-schemas failed (may need to be run manually)"
+
 echo "Extension installed to: $EXTENSION_DIR"
 echo ""
 echo "Please restart GNOME Shell:"
