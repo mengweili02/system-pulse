@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema path="/org/gnome/shell/extensions/system-pulse@mengweili02.github.com/" id="system-pulse@mengweili02.github.com">
+  <schema path="/org/gnome/shell/extensions/system-pulse/" id="org.gnome.shell.extensions.system-pulse">
     <key name="show-cpu" type="b">
       <default>true</default>
       <summary>Show CPU usage</summary>
