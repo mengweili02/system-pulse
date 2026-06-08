@@ -134,7 +134,7 @@ class SystemPulse extends PanelMenu.Button {
                 this._updateMemoryUsage(memContent);
             }
         } catch (e) {
-            console.error('System Monitor - CPU/Memory Error:', e);
+               console.error('System Monitor - CPU/Memory Error:', e);
         }
     }
 
@@ -278,7 +278,7 @@ class SystemPulse extends PanelMenu.Button {
                         let cardKey = Object.keys(data).find(k => k.startsWith('card'));
 
                         if (cardKey) {
-                            let temp = data[cardKey]['GPU Temperature'];
+                            let temp = data[cardKey]['Temperature (Sensor edge) (C)'] || data[cardKey]['Temperature (Sensor junction) (C)'];
                             if (temp !== undefined) {
                                 this._gpuTempLabel.text = `GPU: ${temp.toFixed(1)}°C`;
                             }
