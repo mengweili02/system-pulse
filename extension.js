@@ -31,7 +31,8 @@ class SystemPulse extends PanelMenu.Button {
         this._decimalPlaces = 1;
         this._showCpu = true;
         this._showMemory = true;
-        this._showGpu = true;
+        this._showGpuMemory = true;
+        this._showGpuUsage = true;
         this._showGpuTemp = true;
         this._showCpuTemp = true;
 
@@ -39,14 +40,16 @@ class SystemPulse extends PanelMenu.Button {
 
         this._cpuLabel = new St.Label({ text: 'CPU: --%', y_align: Clutter.ActorAlign.CENTER, style: 'margin-right: 8px;' });
         this._memLabel = new St.Label({ text: 'Mem: --%', y_align: Clutter.ActorAlign.CENTER, style: 'margin-right: 8px;' });
+        this._gpuVramLabel = new St.Label({ text: 'VRAM: --/--Gb', y_align: Clutter.ActorAlign.CENTER, style: 'margin-right: 8px;' });
+        this._gpuUsageLabel = new St.Label({ text: 'GPU: --%', y_align: Clutter.ActorAlign.CENTER, style: 'margin-right: 8px;' });
         this._gpuTempLabel = new St.Label({ text: 'GPU: --°C', y_align: Clutter.ActorAlign.CENTER, style: 'margin-right: 8px;' });
-        this._gpuVramLabel = new St.Label({ text: 'VRAM: --/--Go', y_align: Clutter.ActorAlign.CENTER, style: 'margin-right: 8px;' });
         this._cpuTempLabel = new St.Label({ text: 'CPU Temp: --°C', y_align: Clutter.ActorAlign.CENTER });
 
         this._box.add_child(this._cpuLabel);
         this._box.add_child(this._memLabel);
-        this._box.add_child(this._gpuTempLabel);
+        this._box.add_child(this._gpuUsageLabel);
         this._box.add_child(this._gpuVramLabel);
+        this._box.add_child(this._gpuTempLabel);
         this._box.add_child(this._cpuTempLabel);
 
         this.add_child(this._box);
@@ -67,7 +70,8 @@ class SystemPulse extends PanelMenu.Button {
         this._decimalPlaces = this._clampDecimal(this._settings.get_int('decimal-places'));
         this._showCpu = this._settings.get_boolean('show-cpu');
         this._showMemory = this._settings.get_boolean('show-memory');
-        this._showGpu = this._settings.get_boolean('show-gpu');
+        this._showGpuMemory = this._settings.get_boolean('show-gpu-memory');
+        this._showGpuUsage = this._settings.get_boolean('show-gpu');
         this._showGpuTemp = this._settings.get_boolean('show-gpu-temp');
         this._showCpuTemp = this._settings.get_boolean('show-cpu-temp');
 
@@ -81,8 +85,9 @@ class SystemPulse extends PanelMenu.Button {
     _syncLabelVisibility() {
         this._cpuLabel.visible = this._showCpu;
         this._memLabel.visible = this._showMemory;
+        this._gpuVramLabel.visible = this._showGpuMemory;
+        this._gpuUsageLabel.visible = this._showGpuUsage;
         this._gpuTempLabel.visible = this._showGpuTemp;
-        this._gpuVramLabel.visible = this._showGpu;
         this._cpuTempLabel.visible = this._showCpuTemp;
     }
 
@@ -112,7 +117,7 @@ class SystemPulse extends PanelMenu.Button {
 
             if (this._showMemory) {
                 let memFile = Gio.File.new_for_path('/proc/meminfo');
-                let syncResult = memFile.load_contents_sync(null);
+                let syncResult = memFile.load_contents(null);
                 if (syncResult[0]) {
                     memContent = new TextDecoder('utf-8').decode(syncResult[1]);
                 }
@@ -120,7 +125,7 @@ class SystemPulse extends PanelMenu.Button {
 
             if (this._showCpu) {
                 let statFile = Gio.File.new_for_path('/proc/stat');
-                let syncResult = statFile.load_contents_sync(null);
+                let syncResult = statFile.load_contents(null);
                 if (syncResult[0]) {
                     statContent = new TextDecoder('utf-8').decode(syncResult[1]);
                 }
@@ -220,7 +225,7 @@ class SystemPulse extends PanelMenu.Button {
     }
 
     _updateGPUStats() {
-        if (!this._showGpu)
+        if (!this._showGpuMemory && !this._showGpuUsage)
             return;
 
         try {
@@ -236,35 +241,59 @@ class SystemPulse extends PanelMenu.Button {
                     if (ok && stdout) {
                         try {
                             let data = JSON.parse(stdout);
-                            console.log('GPU JSON:', JSON.stringify(data));
                             let cardKey = Object.keys(data).find(k => k.startsWith('card'));
 
                             if (cardKey) {
                                 let info = data[cardKey];
-                                console.log('GPU info:', JSON.stringify(info));
-                                let gpuUsage = info['GPU use (%)'] || '0';
-                                console.log('GPU usage value:', gpuUsage);
 
-                                let vramTotalB = parseInt(info['VRAM Total Memory (B)']) || 0;
-                                let vramUsedB = parseInt(info['VRAM Total Used Memory (B)']) || 0;
+                                if (this._showGpuMemory) {
+                                    let vramTotalB = parseInt(info['VRAM Total Memory (B)']) || 0;
+                                    let vramUsedB = parseInt(info['VRAM Total Used Memory (B)']) || 0;
+                                    let vramTotalGB = (vramTotalB / 1073741824).toFixed(1);
+                                    let vramUsedGB = (vramUsedB / 1073741824).toFixed(1);
+                                    this._gpuVramLabel.text = `VRAM: ${vramUsedGB}/${vramTotalGB}Gb`;
+                                }
 
-                                let vramTotalGB = (vramTotalB / 1073741824).toFixed(1);
-                                let vramUsedGB = (vramUsedB / 1073741824).toFixed(1);
-
-                                this._gpuVramLabel.text = `VRAM: ${vramUsedGB}/${vramTotalGB}Go | GPU: ${gpuUsage}%`;
+                                if (this._showGpuUsage) {
+                                    let gpuUsage = String(info['GPU use (%)'] || '0').replace('%', '');
+                                    this._gpuUsageLabel.text = `GPU: ${gpuUsage}%`;
+                                }
                             }
                         } catch (e) {
                             console.error('GPU parse error:', e);
-                            this._gpuVramLabel.text = 'VRAM: Err';
                         }
                     }
                 } catch (e) {
-                    this._gpuVramLabel.text = 'VRAM: Err';
+                    console.error('GPU subprocess error:', e);
                 }
             });
         } catch (e) {
-            this._gpuVramLabel.text = 'VRAM: Err';
+            console.error('GPU spawn error:', e);
         }
+    }
+
+    _readCPUTemperature() {
+        try {
+            let thermalDir = Gio.File.new_for_path('/sys/class/thermal');
+            let enumerator = thermalDir.enumerate_children('standard::name', Gio.FileQueryInfoFlags.NONE, null);
+            let info;
+            while ((info = enumerator.next_file(null)) !== null) {
+                let name = info.get_name();
+                if (!name.startsWith('thermal_zone'))
+                    continue;
+                let tFile = thermalDir.get_child(name).get_child('temp');
+                let [ok, contents] = tFile.load_contents(null);
+                if (ok && contents) {
+                    let tempValue = parseInt(new TextDecoder('utf-8').decode(contents));
+                    if (!Number.isNaN(tempValue)) {
+                        return tempValue / 1000;
+                    }
+                }
+            }
+        } catch (e) {
+            // Silently ignore
+        }
+        return null;
     }
 
     _updateTemperatures() {
@@ -288,7 +317,7 @@ class SystemPulse extends PanelMenu.Button {
                         if (cardKey) {
                             let temp = data[cardKey]['Temperature (Sensor edge) (C)'] || data[cardKey]['Temperature (Sensor junction) (C)'];
                             if (temp !== undefined) {
-                                this._gpuTempLabel.text = `GPU: ${temp.toFixed(1)}°C`;
+                                this._gpuTempLabel.text = `GPU: ${Number(temp).toFixed(1)}°C`;
                             }
                         }
                     }
@@ -297,35 +326,13 @@ class SystemPulse extends PanelMenu.Button {
                 }
             });
 
-            let tempFile = Gio.File.new_for_path('/sys/class/thermal/thermal_zone*/temp');
-            let thermalDir = Gio.File.new_for_path('/sys/class/thermal');
-            
-            let cpuTemp = null;
-            try {
-                thermalDir.enumerate_start('temp_*', Gio.FileEnumerateOptions.SYMLINKS, null, (err, enumResult) => {
-                    if (err) return;
-                    
-                    let file;
-                    while ((file = enumResult.next_file(null)) != null) {
-                        let filePath = `/sys/class/thermal/${file.get_name()}/temp`;
-                        let tFile = Gio.File.new_for_path(filePath);
-                        let syncResult = tFile.load_contents_sync(null);
-                        if (syncResult[0]) {
-                            let tempValue = parseInt(new TextDecoder('utf-8').decode(syncResult[1]));
-                            if (tempValue !== undefined && !Number.isNaN(tempValue)) {
-                                cpuTemp = tempValue / 1000;
-                            }
-                        }
-                    }
-                });
-            } catch (e) {
-                // Silently ignore
-            }
-
-            if (cpuTemp !== null) {
-                this._cpuTempLabel.text = `CPU Temp: ${cpuTemp.toFixed(1)}°C`;
-            } else {
-                this._cpuTempLabel.text = 'CPU Temp: --°C';
+            if (this._showCpuTemp) {
+                let cpuTemp = this._readCPUTemperature();
+                if (cpuTemp !== null) {
+                    this._cpuTempLabel.text = `CPU Temp: ${cpuTemp.toFixed(1)}°C`;
+                } else {
+                    this._cpuTempLabel.text = 'CPU Temp: --°C';
+                }
             }
         } catch (e) {
             this._gpuTempLabel.text = 'GPU: --°C';

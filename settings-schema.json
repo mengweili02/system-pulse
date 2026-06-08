@@ -16,6 +16,12 @@
         },
         "show-gpu": {
             "type": "boolean",
+            "title": "GPU Usage",
+            "default": true,
+            "description": "Show AMD GPU usage percentage in the top bar."
+        },
+        "show-gpu-memory": {
+            "type": "boolean",
             "title": "GPU VRAM",
             "default": true,
             "description": "Show AMD GPU VRAM usage in the top bar."

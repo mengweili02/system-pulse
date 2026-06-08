@@ -22,6 +22,11 @@ const METRIC_SETTINGS = [
     },
     {
         key: 'show-gpu',
+        title: 'GPU Usage',
+        subtitle: 'Show AMD GPU usage percentage.',
+    },
+    {
+        key: 'show-gpu-memory',
         title: 'GPU VRAM',
         subtitle: 'Show AMD GPU VRAM usage.',
     },

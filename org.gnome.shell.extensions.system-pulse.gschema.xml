@@ -11,6 +11,10 @@
     </key>
     <key name="show-gpu" type="b">
       <default>true</default>
+      <summary>Show GPU usage</summary>
+    </key>
+    <key name="show-gpu-memory" type="b">
+      <default>true</default>
       <summary>Show GPU VRAM</summary>
     </key>
     <key name="show-gpu-temp" type="b">
